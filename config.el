@@ -47,6 +47,12 @@
 (make-directory "~/Documents/Notes/ObsidianDefaultVault/emacs-org/org-roam-notes" t)
 (setq org-roam-directory "~/Documents/Notes/ObsidianDefaultVault/emacs-org/org-roam-notes")
 
+;; (make-directory "~/org/org-notes" t)
+;; (setq org-directory (file-truename "~/org/org-notes"))
+;;
+;; (make-directory "~/org/org-roam-notes" t)
+;; (setq org-roam-directory (file-truename "~/org/org-roam-notes"))
+
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
