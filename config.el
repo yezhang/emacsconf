@@ -41,11 +41,50 @@
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(make-directory "~/Documents/Notes/ObsidianDefaultVault/emacs-org/org-notes" t)
-(setq org-directory "~/Documents/Notes/ObsidianDefaultVault/emacs-org/org-notes")
+;;
+;; 为了在多台电脑之间共享配置文件，但是设置不同的本地目录，使用环境变量的方法处理。
+;;
+;; 统一路径检测函数
+(defun my/ensure-directory (path default)
+  "确保 PATH 是有效目录，否则使用 DEFAULT 路径，并自动创建默认目录"
+  
+  (let* ((expanded-path (if path (expand-file-name path) ""))
+         (expanded-default (expand-file-name default))
+         (final-path (cond
+                      ((and path
+                            (stringp path)
+                            (not (string-empty-p path))
+                            (file-directory-p expanded-path))
+                       expanded-path)
+                      ((file-directory-p expanded-default)
+                       expanded-default)
+                      (t
+                       (error "Both path and default are invalid")))))
+    (condition-case err
+        (progn
+          (unless (file-directory-p final-path)
+            (make-directory final-path t))
+          (file-name-as-directory final-path))
+      (error
+       (message "Directory error: %s" (error-message-string err))
+       (file-name-as-directory expanded-default)))))
 
-(make-directory "~/Documents/Notes/ObsidianDefaultVault/emacs-org/org-roam-notes" t)
-(setq org-roam-directory "~/Documents/Notes/ObsidianDefaultVault/emacs-org/org-roam-notes")
+(let ((local-org-dir "~/Documents/Notes/ObsidianDefaultVault/emacs-org/org-notes")
+      (local-org-roam-dir "~/Documents/Notes/ObsidianDefaultVault/emacs-org/org-roam-notes"))
+
+  ;; 动态设置 org-directory
+  (setq org-directory
+        (my/ensure-directory
+         (getenv "ORG_DIR") ; 环境变量名称
+         local-org-dir)) ; 默认路径（兼容多设备）
+
+  ;; 动态设置 org-roam-directory（与 org-directory 关联）
+  (setq org-roam-directory
+        (my/ensure-directory
+         (getenv "ORG_ROAM_DIR") ; 环境变量名称
+         local-org-roam-dir))
+  )
+
 
 ;; (make-directory "~/org/org-notes" t)
 ;; (setq org-directory (file-truename "~/org/org-notes"))
