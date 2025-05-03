@@ -39,6 +39,11 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
+;; 检查私有目录下是否存在 secrets.el 文件，若存在则加载
+;; secrets.el 可用于配置电脑之间差异的私密信息，包括笔记目录等
+(when (file-exists-p (expand-file-name "secrets.el" doom-user-dir))
+  (load! "secrets"))
+
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 ;;
