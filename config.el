@@ -97,6 +97,32 @@
 ;; (make-directory "~/org/org-roam-notes" t)
 ;; (setq org-roam-directory (file-truename "~/org/org-roam-notes"))
 
+(after! org-roam
+  ;; (setq org-roam-capture-templates
+  ;;       '(("d" "默认笔记" plain "%?"
+  ;;          :target (file+head "notes/%<%Y%m%d%H%M%S>-${slug}.org"
+  ;;                             "#+title: ${title}\n#+created: %U\n\n")
+  ;;          :empty-lines 1
+  ;;          :unnarrowed t)
+  ;;         ("f" "文件模板" plain (file "~/Documents/Notes/ObsidianDefaultVault/emacs-org/org-roam-notes/templates/c.org")
+  ;;          :target (file "notes/%<%Y%m%d%H%M%S>-${slug}.org")
+  ;;          :empty-lines 1
+  ;;          :unnarrowed t)
+  ;;         ("l" "文献笔记" plain "%?"
+  ;;          :target (file+head "ref/%^{citekey}.org"
+  ;;                             "#+title: %^{title}\n#+filetags: :文献:\n#+roam_key: %^{citekey}\n")
+  ;;          :unnarrowed t)))
+  (defun my/fix-duplicate-titles ()
+    "Remove duplicate #+title: properties, keeping only the first one."
+    (save-excursion
+      (goto-char (point-min))
+      (when (re-search-forward "^#\\+title:\\s-*\\(.*\\)$" nil t)
+        ;; Found first title, now remove any subsequent ones
+        (while (re-search-forward "^#\\+title:\\s-*\\(.*\\)$" nil t)
+          (delete-region (line-beginning-position) (1+ (line-end-position)))))))
+
+  (add-hook 'org-roam-capture-new-node-hook #'my/fix-duplicate-titles)
+  )
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
