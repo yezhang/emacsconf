@@ -112,16 +112,6 @@
   ;;          :target (file+head "ref/%^{citekey}.org"
   ;;                             "#+title: %^{title}\n#+filetags: :文献:\n#+roam_key: %^{citekey}\n")
   ;;          :unnarrowed t)))
-  (defun my/fix-duplicate-titles ()
-    "Remove duplicate #+title: properties, keeping only the first one."
-    (save-excursion
-      (goto-char (point-min))
-      (when (re-search-forward "^#\\+title:\\s-*\\(.*\\)$" nil t)
-        ;; Found first title, now remove any subsequent ones
-        (while (re-search-forward "^#\\+title:\\s-*\\(.*\\)$" nil t)
-          (delete-region (line-beginning-position) (1+ (line-end-position)))))))
-
-  (add-hook 'org-roam-capture-new-node-hook #'my/fix-duplicate-titles)
   )
 
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
