@@ -114,6 +114,10 @@
   ;;          :unnarrowed t)))
   )
 
+;; 解决中文下表格对齐问题
+(use-package! valign
+  :hook (org-mode . valign-mode))
+
 ;; Whenever you reconfigure a package, make sure to wrap your config in an
 ;; `after!' block, otherwise Doom's defaults may override your settings. E.g.
 ;;

@@ -47,3 +47,6 @@
 ;; (unpin! pinned-package another-pinned-package)
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;; (unpin! t)
+
+;; 解决中文表格对齐问题
+(package! valign)
